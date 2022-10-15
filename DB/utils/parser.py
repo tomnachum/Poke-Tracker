@@ -2,6 +2,7 @@ from utils.constants import *
 import json
 from Objects.pokemon import Pokemon
 from Objects.trainer import Trainer
+from Objects.pokemon_trainer_pair import P_T_Pair
 
 
 def _get_dict_from_json(json_dir: str):
@@ -12,19 +13,18 @@ def _get_dict_from_json(json_dir: str):
 
 
 def _parse_poke_data(poke_data):
-    pokemons, trainers, pokemons_trainers = set(), set(), set()
+    pokemons, pokemons_trainers = set(), set()
+    trainers = dict()  # {trainer: trainerId}
     trainer_id = 1
     for p in poke_data:
-        p_id = p[P_ID]
-        pokemon = Pokemon(p_id, p[P_NAME], p[P_TYPE], p[P_HEIGHT], p[P_WEIGHT])
+        pokemon = Pokemon(p[P_ID], p[P_NAME], p[P_TYPE], p[P_HEIGHT], p[P_WEIGHT])
         pokemons.add(pokemon)
-        if len(p[P_TRAINER]) == 0:
-            pokemons_trainers.add((p_id, None))
         for t in p[P_TRAINER]:
             trainer = Trainer(trainer_id, t[T_NAME], t[T_TOWN])
-            trainers.add(trainer)
-            pokemons_trainers.add((p_id, trainer_id))
-            trainer_id += 1
+            if trainer not in trainers:
+                trainers[trainer] = trainer_id
+                trainer_id += 1
+            pokemons_trainers.add(P_T_Pair(pokemon.id, trainers[trainer]))
     return pokemons, trainers, pokemons_trainers
 
 

@@ -18,7 +18,7 @@ class Pokemon:
         return hash((self.name, self.type, self.height, self.weight))
 
     def __str__(self) -> str:
-        return f"<Pokemon> {self.id} {self.name}"
+        return f"({self.id},'{self.name}','{self.type}',{self.height},{self.weight})"
 
     def __repr__(self) -> str:
         return f"<Pokemon> {self.id} {self.name}"

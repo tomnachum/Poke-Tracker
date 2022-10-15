@@ -11,7 +11,7 @@ class Trainer:
         return hash((self.name, self.town))
 
     def __str__(self) -> str:
-        return f"<Trainer> {self.id} {self.name}"
+        return f"({self.id},'{self.name}','{self.town}')"
 
     def __repr__(self) -> str:
         return f"<Trainer> {self.id} {self.name}"
