@@ -13,8 +13,11 @@
    - pokemons
    - trainers
 
-3. run `create_linking_table.sql`
+3. run `create_pokemons_trainers_table.sql`
    which creates the table "pokemons_trainers" inside poke_tracker DB.
 
-4. run `initialize_tables.py`
+4. run `create_pokemons_types_table.sql`
+   which creates the table "pokemons_trainers" inside poke_tracker DB.
+
+5. run `initialize_tables.py`
    which inserts the data from "DB/utils/poke_data.json" to the tables.

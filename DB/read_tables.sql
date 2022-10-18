@@ -6,3 +6,8 @@ FROM trainers;
 SELECT *
 FROM pokemons_trainers
 ORDER BY p_id;
+SELECT *
+FROM types;
+SELECT *
+FROM pokemons_types
+ORDER BY p_id;

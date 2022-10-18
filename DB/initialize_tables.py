@@ -18,7 +18,7 @@ def init_table(connection, table_name, data):
 
 
 if __name__ == "__main__":
-    pokemons, trainers, pokemons_trainers = parse(POKE_DATA_DIR)
+    pokemons, trainers, pokemons_trainers, types, pokemons_types = parse(POKE_DATA_DIR)
     connection = pymysql.connect(
         host="localhost",
         user="root",
@@ -30,3 +30,5 @@ if __name__ == "__main__":
     init_table(connection, "pokemons", pokemons)
     init_table(connection, "trainers", trainers)
     init_table(connection, "pokemons_trainers", pokemons_trainers)
+    init_table(connection, "types", types)
+    init_table(connection, "pokemons_types", pokemons_types)
