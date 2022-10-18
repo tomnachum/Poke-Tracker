@@ -28,7 +28,10 @@ async def add_trainer(request: Request):
 
 @app.delete("/pokemons/{p_name}/trainers/{t_name}")
 def delete_pokemon_of_trainer(p_name, t_name):
-    pass
+    p_id = get_pokemon_id(p_name)
+    t_id = get_trainer_id(t_name)
+    remove_pokemon_from_trainer(p_id, t_id)
+    return {"message": "Pokemon was removed from trainer successfully"}
 
 
 if __name__ == "__main__":
