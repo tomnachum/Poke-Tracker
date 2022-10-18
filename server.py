@@ -26,5 +26,10 @@ async def add_trainer(request: Request):
     return {"message": "Trainer added successfully"}
 
 
+@app.delete("/pokemons/{p_name}/trainers/{t_name}")
+def delete_pokemon_of_trainer(p_name, t_name):
+    pass
+
+
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)

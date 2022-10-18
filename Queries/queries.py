@@ -93,3 +93,18 @@ def add_trainer_to_DB(name, town):
             connection.commit()
     except Exception as e:
         print(e)
+
+
+def get_trainer_id(trainer_name: str):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT t_id
+                    FROM trainers
+                    WHERE name = '{trainer_name}'
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result[0]["t_id"]
+    except Exception as e:
+        print(e)
