@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Response
 import uvicorn
 import requests
-from queries import *
+from queries.queries import *
 
 app = FastAPI()
 
