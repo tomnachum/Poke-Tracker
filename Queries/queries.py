@@ -80,3 +80,16 @@ def get_type_id(type_name):
             return result[0]["ty_id"]
     except Exception as e:
         print(e)
+
+
+def add_trainer_to_DB(name, town):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    INSERT INTO trainers VALUES
+                    (null, '{name}', '{town}')
+                    """
+            cursor.execute(query)
+            connection.commit()
+    except Exception as e:
+        print(e)

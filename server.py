@@ -19,5 +19,12 @@ def get_pokemon(name: str):
     return {"id": p_id, "types": types}
 
 
+@app.post("/trainers")
+async def add_trainer(request: Request):
+    req = await request.json()
+    add_trainer_to_DB(req["name"], req["town"])
+    return {"message": "Trainer added successfully"}
+
+
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
