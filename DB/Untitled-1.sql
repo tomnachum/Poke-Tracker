@@ -1,0 +1,1 @@
+SELECT * FROM `poke_tracker`.`pokemons` LIMIT 1000;
