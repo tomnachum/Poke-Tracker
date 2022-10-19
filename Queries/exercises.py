@@ -65,22 +65,22 @@ def find_owners(pokemon_name="", trainer_id="", trainer_name=""):
         print(e)
 
 
-print(find_owners("bulbasaur", "", "Dantha"))
-
-
 def find_roster(trainer_name="", pokemon_id="", pokemon_type=""):
     if not (pokemon_id == ""):
         pokemon_id = f" AND p.p_id = {pokemon_id}"
     if not (pokemon_type == ""):
-        pokemon_type = f" AND p.type = '{pokemon_type}'"
+        pokemon_type = f" AND types.name = '{pokemon_type}'"
     if not (trainer_name == ""):
         trainer_name = f" AND t.name = '{trainer_name}'"
     try:
         with connection.cursor() as cursor:
             query = f"""
                     SELECT DISTINCT p.name
-                    FROM pokemons AS p JOIN pokemons_trainers AS pt JOIN trainers AS t
-                    ON p.p_id = pt.p_id AND t.t_id = pt.t_id
+                    FROM pokemons AS p JOIN pokemons_trainers AS pt JOIN trainers AS t JOIN pokemons_types JOIN types
+                    ON p.p_id = pt.p_id 
+                    AND t.t_id = pt.t_id 
+                    AND pokemons_types.p_id = p.p_id 
+                    AND pokemons_types.ty_id = types.ty_id
                     WHERE 1 = 1 {trainer_name}{pokemon_id}{pokemon_type}
                     """
             cursor.execute(query)
@@ -90,7 +90,7 @@ def find_roster(trainer_name="", pokemon_id="", pokemon_type=""):
         print(e)
 
 
-# print(find_roster("", "", "grass"))
+print(find_roster("", "", "grass"))
 
 
 def find_most_owned():
@@ -112,6 +112,7 @@ def find_most_owned():
             return [e["name"] for e in result]
     except Exception as e:
         print(e)
+
 
 # eden
 # def add_trainer_to_db(trainer):
