@@ -2,13 +2,15 @@ from fastapi import FastAPI, Request, Response
 import uvicorn
 import requests
 from queries.queries import *
+from queries.exercises import *
 
 app = FastAPI()
 
 
 @app.get("/pokemons/{name}")
 def get_pokemon(name: str):
-    pokemon_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}").json()
+    pokemon_response = requests.get(
+        f"https://pokeapi.co/api/v2/pokemon/{name}").json()
     types = [e["type"]["name"].lower() for e in pokemon_response["types"]]
     p_id = get_pokemon_id(name)
     for type in types:
@@ -18,6 +20,23 @@ def get_pokemon(name: str):
     # TODO: return the pokemon data
     return {"id": p_id, "types": types}
 
+# can return all the pokemons from some type
+
+
+@app.get('/pokemons')
+async def get_all_the_trainer_pokemons(trainer_name="", pokemon_id="", pokemon_type=""):
+    return find_roster(trainer_name, pokemon_id, pokemon_type)
+
+
+
+@app.get('/trainers')
+async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
+    return find_owners(pokemon_name, trainer_id, trainer_name)
+
+
+# adds a new trainer
+# with the following information
+# given by the client: name, town.
 
 @app.post("/trainers")
 async def add_trainer(request: Request):
