@@ -90,9 +90,6 @@ def find_roster(trainer_name="", pokemon_id="", pokemon_type=""):
         print(e)
 
 
-print(find_roster("", "", "grass"))
-
-
 def find_most_owned():
     try:
         with connection.cursor() as cursor:
