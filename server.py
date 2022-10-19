@@ -8,7 +8,8 @@ app = FastAPI()
 
 @app.get("/pokemons/{name}")
 def get_pokemon(name: str):
-    pokemon_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}").json()
+    pokemon_response = requests.get(
+        f"https://pokeapi.co/api/v2/pokemon/{name}").json()
     types = [e["type"]["name"].lower() for e in pokemon_response["types"]]
     p_id = get_pokemon_id(name)
     for type in types:
@@ -36,3 +37,4 @@ def delete_pokemon_of_trainer(p_name, t_name):
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
+    print("test")
