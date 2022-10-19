@@ -9,8 +9,7 @@ app = FastAPI()
 
 @app.get("/pokemons/{name}")
 def get_pokemon(name: str):
-    pokemon_response = requests.get(
-        f"https://pokeapi.co/api/v2/pokemon/{name}").json()
+    pokemon_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}").json()
     types = [e["type"]["name"].lower() for e in pokemon_response["types"]]
     p_id = get_pokemon_id(name)
     for type in types:
@@ -20,16 +19,11 @@ def get_pokemon(name: str):
     # TODO: return the pokemon data
     return {"id": p_id, "types": types}
 
+
 # can return all the pokemons from some type
 
 
-@app.get('/pokemons')
-async def get_all_the_trainer_pokemons(trainer_name="", pokemon_id="", pokemon_type=""):
-    return find_roster(trainer_name, pokemon_id, pokemon_type)
-
-
-
-@app.get('/trainers')
+@app.get("/trainers")
 async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
     return find_owners(pokemon_name, trainer_id, trainer_name)
 
@@ -37,6 +31,7 @@ async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_n
 # adds a new trainer
 # with the following information
 # given by the client: name, town.
+
 
 @app.post("/trainers")
 async def add_trainer(request: Request):
@@ -51,6 +46,45 @@ def delete_pokemon_of_trainer(p_name, t_name):
     t_id = get_trainer_id(t_name)
     remove_pokemon_from_trainer(p_id, t_id)
     return {"message": "Pokemon was removed from trainer successfully"}
+
+
+@app.get("/pokemons")
+async def get_all_the_trainer_pokemons(trainer_name="", pokemon_id="", pokemon_type=""):
+    return find_roster(trainer_name, pokemon_id, pokemon_type)
+
+
+@app.put("/evolve/trainers/{t_name}/pokemons/{p_name}")
+def evlove(t_name, p_name):
+    old_p_id = get_pokemon_id(p_name)
+    trainer_have_this_pokemon = find_roster(t_name, old_p_id, "")
+    if trainer_have_this_pokemon == []:
+        return {"Message": "This trainer does not have that pokemon"}
+    pokemon_response = requests.get(
+        f"https://pokeapi.co/api/v2/pokemon/{p_name}"
+    ).json()
+    species = pokemon_response["species"]
+    evolution_chain = requests.get(species["url"]).json()
+    evolution_url = evolution_chain["evolution_chain"]["url"]
+
+    chain = requests.get(evolution_url).json()["chain"]
+    evolves_to = chain["evolves_to"]
+    c = chain["species"]["name"]
+    # if chain["species"]["name"] != p_name:
+    while evolves_to != [] and c != p_name:
+        evolves_to = evolves_to[0]
+        c = evolves_to["evolves_to"][0]["species"]["name"]
+        evolves_to["evolves_to"]
+
+    if evolves_to == []:
+        return {"Message": "No evolves avilable"}
+    if evolves_to[0]["species"]["name"] == p_name:
+        evolves_to = evolves_to[0]["evolves_to"]
+
+    evolve = evolves_to[0]["species"]["name"]
+    new_p_id = get_pokemon_id(evolve)
+    t_id = get_trainer_id(t_name)
+    update_pokemon_trainer(old_p_id, t_id, new_p_id)
+    return {"Message": "The evolve succeeded", "Evolve to": evolve}
 
 
 if __name__ == "__main__":
