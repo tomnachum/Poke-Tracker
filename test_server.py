@@ -20,3 +20,13 @@ class TestGetPokemonsByType:
         response = client.get("/pokemons/eevee").json()
         all_types = get_types().keys()
         assert len(set(all_types)) == len(all_types)
+
+
+class TestUpdatedPokemonTypes:
+    def get_pokemons_by_type(self, type):
+        return client.get(f"/pokemons?pokemon_type={type}").json()
+
+    def test_venusaur(self):
+        client.get("/pokemons/venusaur").json()
+        assert "venusaur" in self.get_pokemons_by_type("poison")
+        assert "venusaur" in self.get_pokemons_by_type("grass")

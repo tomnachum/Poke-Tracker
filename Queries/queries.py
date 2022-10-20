@@ -135,3 +135,18 @@ def update_pokemon_trainer(old_p_id, t_id, new_p_id):
             connection.commit()
     except Exception as e:
         print(e)
+
+
+def get_pokemon_by_id(p_id):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT *
+                    FROM pokemons
+                    WHERE p_id = '{p_id}'
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+    except Exception as e:
+        print(e)
