@@ -25,6 +25,21 @@ def get_pokemon_by_id(p_id):
         print(e)
 
 
+def get_pokemon_name_by_id(p_id):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT name
+                    FROM pokemons
+                    WHERE p_id = '{p_id}'
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return [e["name"] for e in result]
+    except Exception as e:
+        print(e)
+
+
 def get_pokemon_id(pokemon_name: str):
     try:
         with connection.cursor() as cursor:
@@ -49,5 +64,19 @@ def add_pokemon_to_DB(name, height, weight):
                     """
             cursor.execute(query)
             connection.commit()
+    except Exception as e:
+        print(e)
+
+
+def get_all_pokemons():
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT DISTINCT name
+                    FROM pokemons
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return [e["name"] for e in result]
     except Exception as e:
         print(e)

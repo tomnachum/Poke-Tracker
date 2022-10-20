@@ -2,8 +2,13 @@ from fastapi.testclient import TestClient
 from server import app
 import pytest
 from queries.types_queries import get_types
+import json
 
 client = TestClient(app)
+
+
+def get_pokemons_by_type(type):
+    return client.get(f"/pokemons?pokemon_type={type}").json()
 
 
 class TestGetPokemonsByType:
@@ -22,14 +27,20 @@ class TestGetPokemonsByType:
         assert len(set(all_types)) == len(all_types)
 
 
-class TestUpdatedPokemonTypes:
-    def get_pokemons_by_type(self, type):
-        return client.get(f"/pokemons?pokemon_type={type}").json()
+class TestAddPokemon:
+    def test_add_yanma(self):
+        response = client.post(
+            "/pokemons", json.dumps({"name": "yanma", "height": 100, "weight": 100})
+        ).json()
+        assert "yanma" in get_pokemons_by_type("bug")
+        assert "yanma" in get_pokemons_by_type("flying")
 
+
+class TestUpdatedPokemonTypes:
     def test_venusaur(self):
         client.get("/pokemons/venusaur").json()
-        assert "venusaur" in self.get_pokemons_by_type("poison")
-        assert "venusaur" in self.get_pokemons_by_type("grass")
+        assert "venusaur" in get_pokemons_by_type("poison")
+        assert "venusaur" in get_pokemons_by_type("grass")
 
 
 class TestGetPokemonsByOwner:

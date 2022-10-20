@@ -26,7 +26,13 @@ def add_types_to_DB(p_name, p_id):
 @app.post("/pokemons")
 async def add_pokemon(request: Request):
     req = await request.json()
-    add_pokemon_to_DB(req["name"], req["height"], req["weight"])
+    name = req["name"]
+    all_pokemons = get_all_pokemons()
+    if name in all_pokemons:
+        return {"message": "Pokemon already in DB"}
+    add_pokemon_to_DB(name, req["height"], req["weight"])
+    p_id = get_pokemon_id(name)
+    add_types_to_DB(name, p_id)
     return {"message": "Pokemon added successfully"}
 
 
@@ -63,8 +69,8 @@ def delete_pokemon_of_trainer(p_name, t_name):
 
 
 @app.get("/pokemons")
-async def get_all_the_trainer_pokemons(trainer_name="", pokemon_id="", pokemon_type=""):
-    return find_roster(trainer_name, pokemon_id, pokemon_type)
+async def get_all_the_trainer_pokemons(trainer_name="", pokemon_type=""):
+    return find_roster(trainer_name, pokemon_type)
 
 
 @app.get("/trainers")

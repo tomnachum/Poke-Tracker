@@ -1,4 +1,5 @@
 import pymysql
+from queries.trainers_queries import get_trainer_id
 
 connection = pymysql.connect(
     host="localhost",
@@ -33,5 +34,22 @@ def update_pokemon_trainer(old_p_id, t_id, new_p_id):
                     """
             cursor.execute(query)
             connection.commit()
+    except Exception as e:
+        print(e)
+
+
+def get_pokemons_names_by_trainer(trainer):
+    t_id = get_trainer_id(trainer)
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT DISTINCT p.name
+                    FROM pokemons AS p JOIN pokemons_trainers AS pt
+                    ON p.p_id = pt.p_id
+                    WHERE pt.t_id = '{t_id}'
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return [e["name"] for e in result]
     except Exception as e:
         print(e)
