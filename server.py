@@ -81,7 +81,7 @@ async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_n
 @app.put("/evolve/trainers/{t_name}/pokemons/{p_name}")
 def evlove(t_name, p_name):
     old_p_id = get_pokemon_id(p_name)
-    trainer_have_this_pokemon = find_roster(t_name, old_p_id, "")
+    trainer_have_this_pokemon = is_trainer_has_pokemon(t_name, old_p_id)
     if trainer_have_this_pokemon == []:
         return {"Message": "This trainer does not have that pokemon"}
     pokemon_response = requests.get(
@@ -108,7 +108,7 @@ def evlove(t_name, p_name):
     evolve = evolves_to[0]["species"]["name"]
     new_p_id = get_pokemon_id(evolve)
     t_id = get_trainer_id(t_name)
-    if not find_roster(t_name, new_p_id, "") == []:
+    if not is_trainer_has_pokemon(t_name, new_p_id) == []:
         return {"Message": "This trainer already has the evolve"}
     update_pokemon_trainer(old_p_id, t_id, new_p_id)
     return {"Message": "The evolve succeeded", "Evolve to": evolve}

@@ -31,7 +31,8 @@ class TestGetPokemonsByType:
 class TestAddPokemon:
     def test_add_yanma(self):
         response = client.post(
-            "/pokemons", json.dumps({"name": "yanma", "height": 100, "weight": 100})
+            "/pokemons", json.dumps({"name": "yanma",
+                                    "height": 100, "weight": 100})
         ).json()
         assert "yanma" in get_pokemons_by_type("bug")
         assert "yanma" in get_pokemons_by_type("flying")
@@ -109,16 +110,20 @@ class TestEvolvePokemonByOwnerAndPokemon:
             "/evolve/trainers/Whitney/pokemons/pikachu").json()
         result = {"Message": "This trainer already has the evolve"}
         assert response == result
-        
-class DeletePokemonOfTrainer:
+
+
+class TestDeletePokemonOfTrainer:
     def test_delete_pokemon_of_trainer(self):
-        before_deletion_response = client.get("/pokemons?trainer_name=Whitney").json()
-        before_deletion_list = "venusaur" in before_deletion_response 
-               
+        before_deletion_response = client.get(
+            "/pokemons?trainer_name=Whitney").json()
+        before_deletion_list = "venusaur" in before_deletion_response
+
         delete_response = client.delete("/pokemons/venusaur/trainers/Whitney")
-        after_deletion_response = client.get("/pokemons?trainer_name=Whitney").json()
-        
+        after_deletion_response = client.get(
+            "/pokemons?trainer_name=Whitney").json()
+
         after_deletion_list = "venusaur" in after_deletion_response
         after_deletion_list = not after_deletion_list
         assert after_deletion_list and before_deletion_list == True
-        assert delete_response == {"message": "Pokemon was removed from trainer successfully"}
+        assert delete_response == {
+            "message": "Pokemon was removed from trainer successfully"}
