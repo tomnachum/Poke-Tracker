@@ -102,9 +102,13 @@ def evlove(t_name, p_name):
     evolve = evolves_to[0]["species"]["name"]
     new_p_id = get_pokemon_id(evolve)
     t_id = get_trainer_id(t_name)
+    if not find_roster(t_name, new_p_id, "") == []:
+        return {"Message": "This trainer already has the evolve"}
     update_pokemon_trainer(old_p_id, t_id, new_p_id)
     return {"Message": "The evolve succeeded", "Evolve to": evolve}
 
+
+# print(evlove("Drake", "pinsir"))
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)

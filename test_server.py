@@ -1,3 +1,4 @@
+from attr import evolve
 from fastapi.testclient import TestClient
 from server import app
 import pytest
@@ -53,3 +54,60 @@ class TestGetPokemonsByOwner:
         ]
         response = client.get("/pokemons?trainer_name=Drasna").json()
         assert sorted(response) == sorted(result)
+
+
+class TestGetOwnersByPokemon:
+    def test_get_charmander_Owners(self):
+        result = ["Giovanni", "Jasmine", "Whitney"]
+        response = client.get("/trainers?pokemon_name=charmander").json()
+        assert sorted(response) == sorted(result)
+
+
+class TestEvolvePokemonByOwnerAndPokemon:
+    def test_pinsir_pokemon_can_not_evolve(self):
+        response = client.put(
+            "/evolve/trainers/Drake/pokemons/pinsir").json()
+        result = {"Message": "No evolves avilable"}
+        assert response == result
+
+    def test_archie_dosnt_have_spearow_pokemon(self):
+        response = client.put(
+            "/evolve/trainers/Archie/pokemons/spearow").json()
+        result = {"Message": "This trainer does not have that pokemon"}
+        assert response == result
+
+    def test_oddish_should_evolve_to_gloom(self):
+        response = client.put(
+            "/evolve/trainers/Whitney/pokemons/oddish").json()
+        result = {"Message": "The evolve succeeded", "Evolve to": "gloom"}
+        assert response == result
+
+    def test_trainer_should_not_have_the_prevuos_pokemon(self):
+        response = client.put(
+            "/evolve/trainers/Whitney/pokemons/oddish").json()
+        result = {"Message": "This trainer does not have that pokemon"}
+        assert response == result
+
+    def test_get_all_of_trainer_pokemons_and_see_the_evlove(self):
+        response = client.get("/pokemons?trainer_name=Whitney").json()
+        evolve_in_list = "gloom" in response
+        assert True == evolve_in_list
+
+    def test_trainer_has_both_pokemon_and_evolve(self):
+        response = client.put(
+            "/evolve/trainers/Whitney/pokemons/pikachu").json()
+        result = {"Message": "This trainer already has the evolve"}
+        assert response == result
+        
+class DeletePokemonOfTrainer:
+    def test_delete_pokemon_of_trainer(self):
+        before_deletion_response = client.get("/pokemons?trainer_name=Whitney").json()
+        before_deletion_list = "venusaur" in before_deletion_response 
+               
+        delete_response = client.delete("/pokemons/venusaur/trainers/Whitney")
+        after_deletion_response = client.get("/pokemons?trainer_name=Whitney").json()
+        
+        after_deletion_list = "venusaur" in after_deletion_response
+        after_deletion_list = not after_deletion_list
+        assert after_deletion_list and before_deletion_list == True
+        assert delete_response == {"message": "Pokemon was removed from trainer successfully"}
