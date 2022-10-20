@@ -24,6 +24,19 @@ def remove_pokemon_from_trainer(p_id, t_id):
         print(e)
 
 
+def add_pokemon_to_trainer(p_id, t_id):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    INSERT INTO pokemons_trainers VALUES
+                    ('{p_id}', '{t_id}')
+                    """
+            cursor.execute(query)
+            connection.commit()
+    except Exception as e:
+        print(e)
+
+
 def update_pokemon_trainer(old_p_id, t_id, new_p_id):
     try:
         with connection.cursor() as cursor:
@@ -70,5 +83,3 @@ def is_trainer_has_pokemon(t_name, p_id):
             return [e["name"] for e in result]
     except Exception as e:
         print(e)
-
-

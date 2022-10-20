@@ -47,7 +47,7 @@ def get_pokemon_id(pokemon_name: str):
                     SELECT p_id
                     FROM pokemons
                     WHERE name = '{pokemon_name}'
-                    """
+server.py                    """
             cursor.execute(query)
             result = cursor.fetchall()
             return result[0]["p_id"]
@@ -61,6 +61,19 @@ def add_pokemon_to_DB(name, height, weight):
             query = f"""
                     INSERT INTO pokemons VALUES
                     (null, '{name}', '{height}', '{weight}')
+                    """
+            cursor.execute(query)
+            connection.commit()
+    except Exception as e:
+        print(e)
+
+
+def remove_pokemon_from_DB(p_id):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    DELETE FROM pokemons
+                    WHERE p_id = '{p_id}' 
                     """
             cursor.execute(query)
             connection.commit()

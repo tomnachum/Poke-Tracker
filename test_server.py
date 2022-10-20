@@ -1,5 +1,8 @@
 from attr import evolve
 from fastapi.testclient import TestClient
+from queries.pokemon_queries import get_pokemon_id, get_pokemon_name_by_id,remove_pokemon_from_DB
+from queries.trainers_queries import get_trainer_id
+from queries.pokemons_trainers_queries import add_pokemon_to_trainer, remove_pokemon_from_trainer
 from server import app
 import pytest
 from queries.types_queries import get_types
@@ -36,7 +39,7 @@ class TestAddPokemon:
         ).json()
         assert "yanma" in get_pokemons_by_type("bug")
         assert "yanma" in get_pokemons_by_type("flying")
-
+        remove_pokemon_from_DB(get_pokemon_id("yanma"))
 
 class TestUpdatedPokemonTypes:
     def test_venusaur(self):
@@ -105,6 +108,13 @@ class TestEvolvePokemonByOwnerAndPokemon:
         evolve_in_list = "gloom" in response
         assert True == evolve_in_list
 
+        p_id_remove = get_pokemon_id("gloom")
+        t_id = get_trainer_id("Whitney")
+        remove_pokemon_from_trainer(p_id_remove, t_id)
+
+        p_id_add = get_pokemon_id("oddish")
+        add_pokemon_to_trainer(p_id_add, t_id)
+
     def test_trainer_has_both_pokemon_and_evolve(self):
         response = client.put(
             "/evolve/trainers/Whitney/pokemons/pikachu").json()
@@ -114,20 +124,24 @@ class TestEvolvePokemonByOwnerAndPokemon:
 
 class TestDeletePokemonOfTrainer:
     def test_delete_pokemon_of_trainer(self):
-          
-        
-  
+
         before_deletion_response = client.get(
             "/pokemons?trainer_name=Whitney").json()
         before_deletion_list = "venusaur" in before_deletion_response
 
-        delete_response = client.delete("/pokemons/venusaur/trainers/Whitney").json()
+        delete_response = client.delete(
+            "/pokemons/venusaur/trainers/Whitney").json()
 
         after_deletion_response = client.get(
             "/pokemons?trainer_name=Whitney").json()
 
         after_deletion_list = "venusaur" in after_deletion_response
         after_deletion_list = not after_deletion_list
-        
-        assert after_deletion_list and before_deletion_list 
-        assert delete_response == {"message": "Pokemon was removed from trainer successfully"}
+
+        assert after_deletion_list and before_deletion_list
+        assert delete_response == {
+            "message": "Pokemon was removed from trainer successfully"}
+
+        p_id = get_pokemon_id("venusaur")
+        t_id = get_trainer_id("Whitney")
+        add_pokemon_to_trainer(p_id, t_id)
