@@ -10,4 +10,4 @@ SELECT *
 FROM types;
 SELECT *
 FROM pokemons_types
-ORDER BY p_id;
+ORDER BY ty_id;

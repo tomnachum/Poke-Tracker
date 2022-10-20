@@ -1,4 +1,7 @@
 import pymysql
+from queries.pokemon_queries import get_pokemon_name_by_id, get_all_pokemons
+from queries.pokemons_trainers_queries import get_pokemons_names_by_trainer
+from queries.pokemons_types_queries import get_pokemons_names_by_type
 
 connection = pymysql.connect(
     host="localhost",
@@ -65,29 +68,19 @@ def find_owners(pokemon_name="", trainer_id="", trainer_name=""):
         print(e)
 
 
-def find_roster(trainer_name="", pokemon_id="", pokemon_type=""):
-    if not (pokemon_id == ""):
-        pokemon_id = f" AND p.p_id = {pokemon_id}"
-    if not (pokemon_type == ""):
-        pokemon_type = f" AND types.name = '{pokemon_type}'"
-    if not (trainer_name == ""):
-        trainer_name = f" AND t.name = '{trainer_name}'"
-    try:
-        with connection.cursor() as cursor:
-            query = f"""
-                    SELECT DISTINCT p.name
-                    FROM pokemons AS p JOIN pokemons_trainers AS pt JOIN trainers AS t JOIN pokemons_types JOIN types
-                    ON p.p_id = pt.p_id 
-                    AND t.t_id = pt.t_id 
-                    AND pokemons_types.p_id = p.p_id 
-                    AND pokemons_types.ty_id = types.ty_id
-                    WHERE 1 = 1 {trainer_name}{pokemon_id}{pokemon_type}
-                    """
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return [e["name"] for e in result]
-    except Exception as e:
-        print(e)
+def find_roster(trainer_name="", pokemon_type=""):
+    pokemons_of_trainer = set(get_pokemons_names_by_trainer(trainer_name))
+    pokemons_of_type = set(get_pokemons_names_by_type(pokemon_type))
+    print(pokemons_of_trainer, pokemons_of_type)
+    if trainer_name == "" and pokemon_type == "":
+        return list(set(get_all_pokemons()))
+    elif trainer_name != "" and pokemon_type == "":
+        return list(pokemons_of_trainer)
+    elif trainer_name == "" and pokemon_type != "":
+        return list(pokemons_of_type)
+    else:
+        intersection = pokemons_of_trainer.intersection(pokemons_of_type)
+        return list(intersection)
 
 
 def find_most_owned():
