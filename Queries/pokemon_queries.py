@@ -47,7 +47,7 @@ def get_pokemon_id(pokemon_name: str):
                     SELECT p_id
                     FROM pokemons
                     WHERE name = '{pokemon_name}'
-server.py                    """
+                    """
             cursor.execute(query)
             result = cursor.fetchall()
             return result[0]["p_id"]
