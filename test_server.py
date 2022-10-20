@@ -30,3 +30,26 @@ class TestUpdatedPokemonTypes:
         client.get("/pokemons/venusaur").json()
         assert "venusaur" in self.get_pokemons_by_type("poison")
         assert "venusaur" in self.get_pokemons_by_type("grass")
+
+
+class TestGetPokemonsByOwner:
+    def test_get_drasnas_pokemons(self):
+        result = [
+            "wartortle",
+            "caterpie",
+            "beedrill",
+            "arbok",
+            "clefairy",
+            "wigglytuff",
+            "persian",
+            "growlithe",
+            "machamp",
+            "golem",
+            "dodrio",
+            "hypno",
+            "cubone",
+            "eevee",
+            "kabutops",
+        ]
+        response = client.get("/pokemons?trainer_name=Drasna").json()
+        assert sorted(response) == sorted(result)
