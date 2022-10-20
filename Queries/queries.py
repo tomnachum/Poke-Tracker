@@ -123,6 +123,10 @@ def remove_pokemon_from_trainer(p_id, t_id):
         print(e)
 
 
+# remove_pokemon_from_trainer(4, 21)
+# remove_pokemon_from_trainer(5, 21)
+
+
 def update_pokemon_trainer(old_p_id, t_id, new_p_id):
     try:
         with connection.cursor() as cursor:

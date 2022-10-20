@@ -19,15 +19,6 @@ def get_pokemon(name: str):
     # TODO: return the pokemon data
     return {"id": p_id, "types": types}
 
-
-# can return all the pokemons from some type
-
-
-@app.get("/trainers")
-async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
-    return find_owners(pokemon_name, trainer_id, trainer_name)
-
-
 # adds a new trainer
 # with the following information
 # given by the client: name, town.
@@ -40,17 +31,14 @@ async def add_trainer(request: Request):
     return {"message": "Trainer added successfully"}
 
 
-@app.delete("/pokemons/{p_name}/trainers/{t_name}")
-def delete_pokemon_of_trainer(p_name, t_name):
-    p_id = get_pokemon_id(p_name)
-    t_id = get_trainer_id(t_name)
-    remove_pokemon_from_trainer(p_id, t_id)
-    return {"message": "Pokemon was removed from trainer successfully"}
-
-
 @app.get("/pokemons")
 async def get_all_the_trainer_pokemons(trainer_name="", pokemon_id="", pokemon_type=""):
     return find_roster(trainer_name, pokemon_id, pokemon_type)
+
+
+@app.get("/trainers")
+async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
+    return find_owners(pokemon_name, trainer_id, trainer_name)
 
 
 @app.put("/evolve/trainers/{t_name}/pokemons/{p_name}")
@@ -72,8 +60,8 @@ def evlove(t_name, p_name):
     # if chain["species"]["name"] != p_name:
     while evolves_to != [] and c != p_name:
         evolves_to = evolves_to[0]
-        c = evolves_to["evolves_to"][0]["species"]["name"]
-        evolves_to["evolves_to"]
+        c = evolves_to["species"]["name"]
+        evolves_to = evolves_to["evolves_to"]
 
     if evolves_to == []:
         return {"Message": "No evolves avilable"}
@@ -85,6 +73,16 @@ def evlove(t_name, p_name):
     t_id = get_trainer_id(t_name)
     update_pokemon_trainer(old_p_id, t_id, new_p_id)
     return {"Message": "The evolve succeeded", "Evolve to": evolve}
+
+
+@app.delete("/pokemons/{p_name}/trainers/{t_name}")
+def delete_pokemon_of_trainer(p_name, t_name):
+    p_id = get_pokemon_id(p_name)
+    t_id = get_trainer_id(t_name)
+    remove_pokemon_from_trainer(p_id, t_id)
+    return {"message": "Pokemon was removed from trainer successfully"}
+
+
 
 
 if __name__ == "__main__":
