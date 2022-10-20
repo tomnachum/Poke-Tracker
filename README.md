@@ -21,3 +21,10 @@
 
 5. run `initialize_tables.py`
    which inserts the data from "DB/utils/poke_data.json" to the tables.
+
+### run the server
+
+1. run `server.py`
+   which run the server on port 8000
+
+2. go to http://localhost:8000 and start using the pokemonAPI.

@@ -1,31 +1,60 @@
 from fastapi import FastAPI, Request, Response
 import uvicorn
 import requests
-from queries.queries import *
+from queries.pokemon_queries import *
+from queries.pokemons_trainers_queries import *
+from queries.pokemons_types_queries import *
+from queries.trainers_queries import *
+from queries.types_queries import *
 from queries.exercises import *
 
 app = FastAPI()
 
 
-@app.get("/pokemons/{name}")
-def get_pokemon(name: str):
-    pokemon_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}").json()
+def add_types_to_DB(p_name, p_id):
+    pokemon_response = requests.get(
+        f"https://pokeapi.co/api/v2/pokemon/{p_name}"
+    ).json()
     types = [e["type"]["name"].lower() for e in pokemon_response["types"]]
-    p_id = get_pokemon_id(name)
     for type in types:
         add_type(type)
         ty_id = get_type_id(type)
         add_pokemon_type_pair(p_id, ty_id)
-    # TODO: return the pokemon data
-    return {"id": p_id, "types": types}
+    return types
 
+<<<<<<< HEAD
 # adds a new trainer
 # with the following information
 # given by the client: name, town.
+=======
+
+@app.post("/pokemons")
+async def add_pokemon(request: Request):
+    req = await request.json()
+    add_pokemon_to_DB(req["name"], req["height"], req["weight"])
+    return {"message": "Pokemon added successfully"}
+
+
+@app.get("/pokemons/{name}")
+def get_pokemon(name: str):
+    p_id = get_pokemon_id(name)
+    types = add_types_to_DB(name, p_id)
+    pokemon_data = get_pokemon_by_id(p_id)
+    return {"pokemon": pokemon_data, "types": types}
+
+
+@app.get("/trainers")
+async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
+    # can return all the pokemons from some type
+    return find_owners(pokemon_name, trainer_id, trainer_name)
+>>>>>>> 1898746f48abf301a641c2cdf9c88cadf31dfa1c
 
 
 @app.post("/trainers")
 async def add_trainer(request: Request):
+    # adds a new trainer
+    # with the following information
+    # given by the client: name, town.
     req = await request.json()
     add_trainer_to_DB(req["name"], req["town"])
     return {"message": "Trainer added successfully"}
