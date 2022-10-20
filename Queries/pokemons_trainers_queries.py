@@ -53,3 +53,20 @@ def get_pokemons_names_by_trainer(trainer):
             return [e["name"] for e in result]
     except Exception as e:
         print(e)
+
+
+def is_trainer_has_pokemon(t_name, p_id):
+    t_id = get_trainer_id(t_name)
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    SELECT DISTINCT p.name
+                    FROM pokemons AS p JOIN pokemons_trainers AS pt
+                    ON p.p_id = pt.p_id
+                    WHERE pt.t_id = '{t_id}' AND pt.p_id = '{p_id}'
+                    """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return [e["name"] for e in result]
+    except Exception as e:
+        print(e)
