@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from server import app
 import pytest
-from queries.queries import get_types
+from queries.types_queries import get_types
 
 client = TestClient(app)
 

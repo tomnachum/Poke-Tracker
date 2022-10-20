@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Request, Response
 import uvicorn
 import requests
-from queries.queries import *
+from queries.pokemon_queries import *
+from queries.pokemons_trainers_queries import *
+from queries.pokemons_types_queries import *
+from queries.trainers_queries import *
+from queries.types_queries import *
 from queries.exercises import *
 
 app = FastAPI()
