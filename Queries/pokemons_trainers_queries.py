@@ -70,3 +70,5 @@ def is_trainer_has_pokemon(t_name, p_id):
             return [e["name"] for e in result]
     except Exception as e:
         print(e)
+
+
