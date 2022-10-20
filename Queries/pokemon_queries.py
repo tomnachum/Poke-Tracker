@@ -38,3 +38,16 @@ def get_pokemon_id(pokemon_name: str):
             return result[0]["p_id"]
     except Exception as e:
         print(e)
+
+
+def add_pokemon_to_DB(name, height, weight):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                    INSERT INTO pokemons VALUES
+                    (null, '{name}', '{height}', '{weight}')
+                    """
+            cursor.execute(query)
+            connection.commit()
+    except Exception as e:
+        print(e)

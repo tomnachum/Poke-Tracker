@@ -23,6 +23,13 @@ def add_types_to_DB(p_name, p_id):
     return types
 
 
+@app.post("/pokemons")
+async def add_pokemon(request: Request):
+    req = await request.json()
+    add_pokemon_to_DB(req["name"], req["height"], req["weight"])
+    return {"message": "Pokemon added successfully"}
+
+
 @app.get("/pokemons/{name}")
 def get_pokemon(name: str):
     p_id = get_pokemon_id(name)
