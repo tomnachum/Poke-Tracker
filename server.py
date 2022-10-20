@@ -26,7 +26,6 @@ def add_types_to_DB(p_name, p_id):
 # adds a new trainer
 # with the following information
 # given by the client: name, town.
-=======
 
 @app.post("/pokemons")
 async def add_pokemon(request: Request):
@@ -47,7 +46,6 @@ def get_pokemon(name: str):
 async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
     # can return all the pokemons from some type
     return find_owners(pokemon_name, trainer_id, trainer_name)
->>>>>>> 1898746f48abf301a641c2cdf9c88cadf31dfa1c
 
 
 @app.post("/trainers")
