@@ -22,11 +22,6 @@ def add_types_to_DB(p_name, p_id):
         add_pokemon_type_pair(p_id, ty_id)
     return types
 
-<<<<<<< HEAD
-# adds a new trainer
-# with the following information
-# given by the client: name, town.
-=======
 
 @app.post("/pokemons")
 async def add_pokemon(request: Request):
@@ -47,7 +42,6 @@ def get_pokemon(name: str):
 async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
     # can return all the pokemons from some type
     return find_owners(pokemon_name, trainer_id, trainer_name)
->>>>>>> 1898746f48abf301a641c2cdf9c88cadf31dfa1c
 
 
 @app.post("/trainers")
@@ -58,6 +52,14 @@ async def add_trainer(request: Request):
     req = await request.json()
     add_trainer_to_DB(req["name"], req["town"])
     return {"message": "Trainer added successfully"}
+
+
+@app.delete("/pokemons/{p_name}/trainers/{t_name}")
+def delete_pokemon_of_trainer(p_name, t_name):
+    p_id = get_pokemon_id(p_name)
+    t_id = get_trainer_id(t_name)
+    remove_pokemon_from_trainer(p_id, t_id)
+    return {"message": "Pokemon was removed from trainer successfully"}
 
 
 @app.get("/pokemons")
@@ -102,16 +104,6 @@ def evlove(t_name, p_name):
     t_id = get_trainer_id(t_name)
     update_pokemon_trainer(old_p_id, t_id, new_p_id)
     return {"Message": "The evolve succeeded", "Evolve to": evolve}
-
-
-@app.delete("/pokemons/{p_name}/trainers/{t_name}")
-def delete_pokemon_of_trainer(p_name, t_name):
-    p_id = get_pokemon_id(p_name)
-    t_id = get_trainer_id(t_name)
-    remove_pokemon_from_trainer(p_id, t_id)
-    return {"message": "Pokemon was removed from trainer successfully"}
-
-
 
 
 if __name__ == "__main__":
