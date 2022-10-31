@@ -73,4 +73,4 @@ evolve specific pokemon of specific trainer, according to the pokeAPI evolution 
 
 ## DB Architecture
 
-<img src="images/db.png" style="width:300px">
+<img src="images/db.png" style="width:500px">
