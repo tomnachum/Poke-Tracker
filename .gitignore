@@ -2,3 +2,4 @@ DB/utils/__pycache__/
 DB/Objects/__pycache__/
 __pycache__
 .vscode
+.pytest_cache

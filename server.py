@@ -73,11 +73,6 @@ async def get_all_the_trainer_pokemons(trainer_name="", pokemon_type=""):
     return find_roster(trainer_name, pokemon_type)
 
 
-@app.get("/trainers")
-async def get_all_the_pokemon_trainers(pokemon_name="", trainer_id="", trainer_name=""):
-    return find_owners(pokemon_name, trainer_id, trainer_name)
-
-
 @app.put("/evolve/trainers/{t_name}/pokemons/{p_name}")
 def evlove(t_name, p_name):
     old_p_id = get_pokemon_id(p_name)
@@ -113,8 +108,6 @@ def evlove(t_name, p_name):
     update_pokemon_trainer(old_p_id, t_id, new_p_id)
     return {"Message": "The evolve succeeded", "Evolve to": evolve}
 
-
-# print(evlove("Drake", "pinsir"))
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
