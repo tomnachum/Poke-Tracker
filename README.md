@@ -30,7 +30,7 @@
 5. run `initialize_tables.py`
    which inserts the data from "DB/utils/poke_data.json" to the tables.
 
-### run the server
+### Run the server
 
 1. run `server.py`
    which run the server on port 8000
@@ -73,4 +73,4 @@ evolve specific pokemon of specific trainer, according to the pokeAPI evolution 
 
 ## DB Architecture
 
-<img src="images/db.png">
+<img src="images/db.png" style="width:300px">
